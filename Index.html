@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo-Clip — Book a cut. Hold your earnings.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell grid-noise">
+
+  <header class="sticky top-0 z-30 border-b border-violet-300/10 bg-[#0b071b]/88 backdrop-blur-xl">
+    <div class="w-full px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+      <button type="button" onclick="showView('overview')" class="flex items-center gap-3 text-left">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-lg shadow-fuchsia-500/40 glow-sm">
+          <i data-lucide="scissors" class="w-4"></i>
+        </span>
+        <span class="font-bold tracking-[.16em] text-[15px]">NEO-CLIP</span>
+      </button>
+      <div class="hidden md:flex items-center gap-5 text-sm text-violet-100/70">
+        <button type="button" onclick="showView('catalog')" class="hover:text-cyan-300 transition">Style catalog</button>
+        <button type="button" onclick="showView('customer')" class="hover:text-cyan-300 transition">Book a cut</button>
+        <button type="button" onclick="showView('barber')" class="hover:text-cyan-300 transition">For barbers</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="header-user" class="hidden items-center gap-2">
+          <span class="hidden sm:inline rounded-full border border-emerald-300/40 bg-emerald-300/10 px-3 py-1 font-mono text-[10px] font-bold tracking-wider text-emerald-200" id="header-user-badge">CUSTOMER</span>
+          <span class="text-sm font-semibold" id="header-user-name">—</span>
+          <button type="button" onclick="logout()" class="ghost-button rounded-lg px-2 py-1 text-xs">Logout</button>
+        </div>
+        <button type="button" id="header-login-btn" onclick="showView('login')" class="clip-button rounded-lg px-4 py-2 text-sm font-bold">Log in</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="w-full lg:flex">
+    <aside class="sidebar lg:sticky lg:top-[61px] lg:h-[calc(100vh-61px)] lg:w-60 lg:shrink-0 border-b lg:border-b-0 lg:border-r border-violet-300/10 bg-[#0d0820]/85 p-3 overflow-y-auto">
+      <nav aria-label="Neo-Clip" class="flex lg:flex-col gap-1">
+        <button class="tab-btn active px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="overview"><i data-lucide="sparkles" class="inline w-4 mr-2"></i>Overview</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="catalog"><i data-lucide="grid-3x3" class="inline w-4 mr-2"></i>Style catalog<span class="nav-badge">200</span></button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="customer"><i data-lucide="user-round" class="inline w-4 mr-2"></i>Customer</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="barber"><i data-lucide="badge-check" class="inline w-4 mr-2"></i>Barber</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="chat"><i data-lucide="message-circle" class="inline w-4 mr-2"></i>Chat</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="ladder"><i data-lucide="trending-up" class="inline w-4 mr-2"></i>Ladder</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="roadmap"><i data-lucide="route" class="inline w-4 mr-2"></i>Roadmap</button>
+        <button class="tab-btn px-3 py-2.5 text-left text-sm font-semibold rounded-r-lg" data-view="investors"><i data-lucide="briefcase" class="inline w-4 mr-2"></i>Investors</button>
+      </nav>
+      <div class="hidden lg:block mt-6 rounded-xl border border-violet-300/15 bg-black/25 p-3">
+        <p class="font-mono text-[10px] text-cyan-200">ABUJA PILOT</p>
+        <p class="mt-1 text-xs text-violet-100/65">40 barbers · 200 cuts shipped · wallet live</p>
+      </div>
+    </aside>
+
+    <main class="w-full min-w-0 p-4 sm:p-7 lg:p-10">
+
+      <!-- OVERVIEW -->
+      <section id="overview" class="view active">
+        <div class="max-w-7xl mx-auto">
+          <div class="glass neon-line overflow-hidden rounded-3xl" style="background:linear-gradient(135deg,#1d123b,#110a25)">
+            <div class="grid lg:grid-cols-2">
+              <div class="p-7 sm:p-12 flex flex-col justify-center">
+                <p class="mb-4 font-mono text-xs uppercase tracking-[.22em] text-cyan-300 font-bold">BOOK A CUT · HOLD YOUR EARNINGS</p>
+                <h1 class="max-w-xl font-bold leading-[1.03] tracking-tight text-[34px] sm:text-[44px]">The barber economy, in your pocket.</h1>
+                <p class="mt-6 max-w-xl leading-relaxed text-violet-100/80 text-[17px]">
+                  Browse 200 styles. Book a verified barber in minutes. Pay on Clip. Barbers hold their earnings in a wallet that grows with every cut — and unlock more reach through the discount ladder.
+                </p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                  <button type="button" onclick="showView('login'); setLoginTab('customer')" class="clip-button rounded-xl px-6 py-3 font-bold">Book as customer</button>
+                  <button type="button" onclick="showView('login'); setLoginTab('barber')" class="ghost-button rounded-xl px-6 py-3 font-bold">Earn as barber</button>
+                </div>
+                <div class="mt-8 flex items-center gap-4 text-xs text-violet-100/55">
+                  <span class="flex items-center gap-1"><i data-lucide="shield-check" class="w-3.5 text-cyan-300"></i>Verified barbers</span>
+                  <span class="flex items-center gap-1"><i data-lucide="wallet" class="w-3.5 text-emerald-300"></i>In-app wallet</span>
+                  <span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3.5 text-fuchsia-300"></i>Direct chat</span>
+                </div>
+              </div>
+              <div class="relative min-h-[300px]">
+                <img loading="lazy" class="absolute inset-0 h-full w-full object-cover opacity-80" src="https://images.pexels.com/photos/4625626/pexels-photo-4625626.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Barber performing a precise fade.">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#161029] via-transparent to-transparent"></div>
+                <div class="absolute bottom-5 right-5 rounded-xl border border-cyan-300/30 bg-[#0d0820]/88 px-4 py-3 backdrop-blur glow-cyan">
+                  <p class="font-mono text-[10px] text-cyan-200">NOW LIVE IN ABUJA</p>
+                  <p class="mt-1 text-sm font-semibold">40 verified barbers · wallet active</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="glass rounded-2xl p-5 card-hover"><i data-lucide="grid-3x3" class="text-cyan-300 mb-2"></i><p class="text-2xl font-bold text-cyan-200">200</p><p class="mt-1 text-xs text-violet-100/60">Curated hair styles in the catalog</p></div>
+            <div class="glass rounded-2xl p-5 card-hover"><i data-lucide="wallet" class="text-emerald-300 mb-2"></i><p class="text-2xl font-bold text-emerald-200">Wallet</p><p class="mt-1 text-xs text-violet-100/60">Barbers hold funds in-app, withdraw any time</p></div>
+            <div class="glass rounded-2xl p-5 card-hover"><i data-lucide="message-circle" class="text-fuchsia-300 mb-2"></i><p class="text-2xl font-bold text-fuchsia-300">Chat</p><p class="mt-1 text-xs text-violet-100/60">Talk to your barber before you book</p></div>
+            <div class="glass rounded-2xl p-5 card-hover"><i data-lucide="trending-up" class="text-violet-300 mb-2"></i><p class="text-2xl font-bold text-violet-200">Ladder</p><p class="mt-1 text-xs text-violet-100/60">Discounts unlock more visibility over time</p></div>
+          </div>
+
+          <div class="mt-6 grid md:grid-cols-3 gap-4">
+            <article class="glass rounded-2xl p-6 card-hover">
+              <div class="grid h-11 w-11 place-items-center rounded-xl bg-cyan-300/15 mb-3"><i data-lucide="search" class="text-cyan-300"></i></div>
+              <h2 class="font-bold text-xl">Find your style</h2>
+              <p class="mt-2 text-sm leading-relaxed text-violet-100/70">Browse 200 cuts across 10 categories. Filter by maintenance and price.</p>
+            </article>
+            <article class="glass rounded-2xl p-6 card-hover">
+              <div class="grid h-11 w-11 place-items-center rounded-xl bg-fuchsia-300/15 mb-3"><i data-lucide="calendar-check" class="text-fuchsia-300"></i></div>
+              <h2 class="font-bold text-xl">Book in minutes</h2>
+              <p class="mt-2 text-sm leading-relaxed text-violet-100/70">Pick a barber, pick a slot, pay on Clip. Chat before you commit if you want.</p>
+            </article>
+            <article class="glass rounded-2xl p-6 card-hover">
+              <div class="grid h-11 w-11 place-items-center rounded-xl bg-emerald-300/15 mb-3"><i data-lucide="banknote" class="text-emerald-300"></i></div>
+              <h2 class="font-bold text-xl">Hold your earnings</h2>
+              <p class="mt-2 text-sm leading-relaxed text-violet-100/70">Every payment lands in your Clip wallet. Withdraw to your bank whenever.</p>
+            </article>
+          </div>
+
+          <div class="mt-6 glass rounded-2xl p-6 text-center">
+            <p class="text-lg font-semibold">Ready to get started?</p>
+            <p class="mt-1 text-sm text-violet-100/65">Sign up in 30 seconds. No app store, no downloads.</p>
+            <div class="mt-4 flex flex-wrap justify-center gap-3">
+              <button type="button" onclick="showView('login'); setLoginTab('customer')" class="clip-button rounded-xl px-5 py-2.5 text-sm font-bold">Customer login</button>
+              <button type="button" onclick="showView('login'); setLoginTab('barber')" class="ghost-button rounded-xl px-5 py-2.5 text-sm font-bold">Barber login</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGIN -->
+      <section id="login" class="view">
+        <div class="max-w-md mx-auto">
+          <div class="glass neon-line rounded-3xl p-6 sm:p-8 glow-sm">
+            <div class="text-center mb-6">
+              <span class="grid h-14 w-14 mx-auto place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-fuchsia-500 shadow-lg shadow-fuchsia-500/40">
+                <i data-lucide="scissors" class="w-6"></i>
+              </span>
+              <h1 class="mt-4 font-bold text-2xl">Welcome to Neo-Clip</h1>
+              <p class="mt-1 text-sm text-violet-100/65">Log in to book, earn, and hold your funds.</p>
+            </div>
+
+            <div class="rounded-xl border border-violet-300/20 p-1 mb-6 flex">
+              <button id="login-tab-customer" onclick="setLoginTab('customer')" class="flex-1 rounded-lg bg-violet-500 px-4 py-2 text-sm font-bold transition">Customer</button>
+              <button id="login-tab-barber" onclick="setLoginTab('barber')" class="flex-1 rounded-lg px-4 py-2 text-sm font-bold text-violet-100/65 transition">Barber</button>
+            </div>
+
+            <form id="customer-login-form" class="space-y-4">
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="cl-name">Your name</label><input id="cl-name" required class="input-dark w-full rounded-xl px-4 py-3" placeholder="e.g. Chuka Obi"></div>
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="cl-phone">Phone number</label><input id="cl-phone" required type="tel" class="input-dark w-full rounded-xl px-4 py-3" placeholder="+234 800 000 0000"></div>
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="cl-area">Your area</label><select id="cl-area" class="input-dark w-full rounded-xl px-4 py-3"><option>Gwarinpa</option><option>Wuse II</option><option>Maitama</option><option>Asokoro</option><option>Lekki</option></select></div>
+              <button type="submit" class="clip-button w-full rounded-xl px-5 py-3 font-bold">Create customer account</button>
+              <p class="text-center text-[11px] text-violet-100/45">This is a demo. No password required in the MVP.</p>
+            </form>
+
+            <form id="barber-login-form" class="hidden-form space-y-4">
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="bl-name">Professional name</label><input id="bl-name" required class="input-dark w-full rounded-xl px-4 py-3" placeholder="e.g. Kelechi N."></div>
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="bl-phone">Phone number</label><input id="bl-phone" required type="tel" class="input-dark w-full rounded-xl px-4 py-3" placeholder="+234 800 000 0000"></div>
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="bl-area">Primary location</label><select id="bl-area" class="input-dark w-full rounded-xl px-4 py-3"><option>Gwarinpa</option><option>Wuse II</option><option>Maitama</option><option>Asokoro</option><option>Lekki</option></select></div>
+              <div><label class="mb-1 block text-xs text-violet-100/70" for="bl-specialty">Signature specialty</label><select id="bl-specialty" class="input-dark w-full rounded-xl px-4 py-3"><option>Skin Fade</option><option>Low Fade</option><option>High Fade</option><option>Taper</option><option>Locs</option><option>Pompadour</option></select></div>
+              <button type="submit" class="clip-button w-full rounded-xl px-5 py-3 font-bold">Open barber account</button>
+              <p class="text-center text-[11px] text-violet-100/45">Your wallet is created with your account.</p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- STYLE CATALOG -->
+      <section id="catalog" class="view">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p class="font-mono text-xs text-cyan-200 font-bold">200 HAIR STYLES</p>
+              <h1 class="mt-2 font-bold text-[32px] leading-tight">Find your next cut.</h1>
+              <p class="mt-2 text-sm text-violet-100/70 max-w-2xl">Every variant is distinct — 10 categories × 20 modifiers. Each barber prices them independently. Tap any style to book.</p>
+            </div>
+            <div class="relative">
+              <i data-lucide="search" class="w-4 absolute left-3 top-1/2 -translate-y-1/2 text-violet-100/50"></i>
+              <input type="text" id="catalog-search" oninput="catalogSearch(this.value)" placeholder="Search styles..." class="input-dark rounded-xl pl-9 pr-4 py-2.5 text-sm w-64">
+            </div>
+          </div>
+
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <label class="text-xs text-violet-100/60 flex items-center gap-2">
+              Prices for
+              <select id="catalog-barber" onchange="setPreviewBarber(this.value)" class="input-dark rounded-lg px-3 py-1.5 text-xs"></select>
+            </label>
+            <span class="text-xs text-violet-100/45">Each barber sets their own price per category.</span>
+          </div>
+
+          <div id="catalog-filters" class="mt-5 flex flex-wrap gap-2"></div>
+          <p class="mt-4 text-xs text-violet-100/55" id="catalog-count">Loading styles…</p>
+          <div id="catalog-grid" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+
+          <div class="mt-6 flex justify-center">
+            <button id="catalog-load-more" onclick="loadMoreStyles()" class="ghost-button rounded-xl px-6 py-3 text-sm font-bold">Load more styles</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CUSTOMER PORTAL -->
+      <section id="customer" class="view">
+        <div class="max-w-6xl mx-auto">
+          <div id="customer-gate" class="glass rounded-3xl p-8 sm:p-12 text-center max-w-lg mx-auto">
+            <div class="grid h-16 w-16 mx-auto place-items-center rounded-2xl bg-cyan-300/15 mb-4"><i data-lucide="user-round" class="w-7 text-cyan-300"></i></div>
+            <h1 class="font-bold text-2xl">Log in to book</h1>
+            <p class="mt-2 text-sm text-violet-100/65">Create a customer account to browse styles, book verified barbers, and chat before you commit.</p>
+            <button onclick="showView('login'); setLoginTab('customer')" class="clip-button mt-6 rounded-xl px-6 py-3 font-bold">Log in as customer</button>
+          </div>
+
+          <div id="customer-dashboard" class="hidden-form">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+              <div>
+                <p class="font-mono text-xs text-cyan-200 font-bold">CUSTOMER DASHBOARD</p>
+                <h1 class="mt-2 font-bold text-[28px] leading-tight">Welcome back, <span id="cust-welcome-name" class="text-cyan-200">—</span>.</h1>
+                <p class="mt-1 text-sm text-violet-100/65"><span id="cust-area">—</span> · Ready for your next cut?</p>
+              </div>
+              <button onclick="showView('catalog')" class="clip-button rounded-xl px-5 py-2.5 text-sm font-bold">Browse styles</button>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-5">
+              <div class="lg:col-span-2 space-y-5">
+                <div class="glass rounded-2xl p-6">
+                  <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p class="font-mono text-xs text-fuchsia-200">YOUR SELECTED STYLE</p>
+                      <p class="mt-1 text-lg font-bold" id="selected-style-name">No style selected</p>
+                      <p class="text-xs text-violet-100/55" id="selected-style-meta">Browse the catalog to pick a style</p>
+                    </div>
+                    <button onclick="showView('catalog')" class="ghost-button rounded-lg px-3 py-2 text-xs font-bold">Change</button>
+                  </div>
+                  <div class="border-t border-violet-300/15 pt-4">
+                    <p class="font-mono text-xs text-cyan-200 mb-3">CHOOSE A BARBER</p>
+                    <div id="customer-barbers" class="space-y-2"></div>
+                  </div>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <h2 class="font-bold text-xl">Recent bookings</h2>
+                  <ul id="customer-bookings" class="mt-3 space-y-2 text-sm">
+                    <li class="text-violet-100/45 text-xs">No bookings yet. Pick a style and a barber to start.</li>
+                  </ul>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <div class="flex items-center justify-between">
+                    <h2 class="font-bold text-xl">Messages</h2>
+                    <i data-lucide="message-circle" class="w-5 text-fuchsia-300"></i>
+                  </div>
+                  <p class="mt-1 text-xs text-violet-100/55">Chat with any barber before you book.</p>
+                  <div id="customer-chat-list" class="mt-3 space-y-2"></div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="glass rounded-2xl p-6 glow-sm">
+                  <p class="font-mono text-xs text-cyan-200">YOUR WALLET</p>
+                  <p class="mt-2 text-xs text-violet-100/60">Clip credits</p>
+                  <p id="cust-wallet-balance" class="mt-1 text-4xl font-bold text-cyan-200 balance-number">₦0</p>
+                  <p class="mt-1 text-xs text-violet-100/55">Earned from referrals and bonuses</p>
+                  <button onclick="addDemoCredits()" class="ghost-button mt-4 w-full rounded-xl px-4 py-2 text-sm font-bold">Add demo credits</button>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <h2 class="font-bold text-lg">Quick actions</h2>
+                  <div class="mt-3 space-y-2">
+                    <button onclick="showView('catalog')" class="ghost-button w-full rounded-lg px-3 py-2 text-sm font-bold text-left flex items-center gap-2"><i data-lucide="grid-3x3" class="w-4 text-cyan-300"></i>Browse 200 styles</button>
+                    <button onclick="showView('ladder')" class="ghost-button w-full rounded-lg px-3 py-2 text-sm font-bold text-left flex items-center gap-2"><i data-lucide="trending-up" class="w-4 text-violet-300"></i>See the reach ladder</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BARBER PORTAL -->
+      <section id="barber" class="view">
+        <div class="max-w-6xl mx-auto">
+          <div id="barber-gate" class="glass rounded-3xl p-8 sm:p-12 text-center max-w-lg mx-auto">
+            <div class="grid h-16 w-16 mx-auto place-items-center rounded-2xl bg-fuchsia-300/15 mb-4"><i data-lucide="badge-check" class="w-7 text-fuchsia-300"></i></div>
+            <h1 class="font-bold text-2xl">Log in to earn</h1>
+            <p class="mt-2 text-sm text-violet-100/65">Open a barber account to receive bookings, hold your earnings in the Clip wallet, and set your own prices.</p>
+            <button onclick="showView('login'); setLoginTab('barber')" class="clip-button mt-6 rounded-xl px-6 py-3 font-bold">Log in as barber</button>
+          </div>
+
+          <div id="barber-dashboard" class="hidden-form">
+            <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+              <div>
+                <p class="font-mono text-xs text-fuchsia-200 font-bold">BARBER DASHBOARD</p>
+                <h1 class="mt-2 font-bold text-[28px] leading-tight">Welcome, <span id="barb-welcome-name" class="text-fuchsia-300">—</span>.</h1>
+                <p class="mt-1 text-sm text-violet-100/65"><span id="barb-area">—</span> · <span id="barb-specialty">—</span></p>
+              </div>
+              <button id="availability-btn" onclick="toggleAvailability()" class="rounded-xl border border-cyan-300/40 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 glow-cyan">Available now</button>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-5">
+              <div class="lg:col-span-2 space-y-5">
+                <div class="glass rounded-2xl p-6 glow-emerald border border-emerald-300/25">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p class="font-mono text-xs text-emerald-200">CLIP WALLET</p>
+                      <p class="mt-2 text-xs text-violet-100/60">Available balance</p>
+                      <p id="wallet-balance" class="mt-1 text-4xl font-bold text-emerald-300 balance-number">₦0</p>
+                    </div>
+                    <span class="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-3 py-1 text-[10px] font-bold text-emerald-200">HOLD FUNDS IN-APP</span>
+                  </div>
+                  <div class="mt-4 grid grid-cols-2 gap-2 text-xs">
+                    <div class="rounded-lg bg-white/5 p-3">This week<b class="block text-cyan-200 text-base" id="wallet-week">₦0</b></div>
+                    <div class="rounded-lg bg-white/5 p-3">Total earned<b class="block text-cyan-200 text-base" id="wallet-total">₦0</b></div>
+                  </div>
+                  <div class="mt-4 flex gap-2">
+                    <button onclick="withdrawWallet()" class="clip-button flex-1 rounded-xl px-4 py-3 font-bold">Withdraw to bank</button>
+                    <button onclick="addWalletFunds()" class="ghost-button rounded-xl px-4 py-3 font-bold text-sm">Add demo</button>
+                  </div>
+                  <p id="wallet-status" class="status mt-2 text-xs text-cyan-200"></p>
+                  <div class="mt-5">
+                    <p class="text-xs text-violet-100/60 mb-2">Recent transactions</p>
+                    <ul id="wallet-tx" class="space-y-2 text-xs max-h-40 overflow-y-auto">
+                      <li class="text-violet-100/40">No transactions yet.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- NEW: PRICE EDITOR -->
+                <div class="glass rounded-2xl p-6 border border-cyan-300/25">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p class="font-mono text-xs text-cyan-200">PRICE SETTINGS</p>
+                      <h2 class="mt-1 font-bold text-xl">Set your own prices</h2>
+                      <p class="mt-1 text-xs text-violet-100/60">These prices appear in the catalog. Each category can be priced independently. Modifiers add a small upcharge on top.</p>
+                    </div>
+                    <i data-lucide="tag" class="w-5 text-cyan-300"></i>
+                  </div>
+                  <div id="price-editor" class="mt-4 grid sm:grid-cols-2 gap-2"></div>
+                  <button onclick="saveBarberPrices()" class="clip-button mt-4 w-full rounded-xl px-4 py-3 font-bold">Save prices</button>
+                  <p id="price-status" class="status mt-2 text-xs text-cyan-200"></p>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <div class="flex items-center justify-between">
+                    <h2 class="font-bold text-xl">Customer messages</h2>
+                    <i data-lucide="message-circle" class="w-5 text-cyan-300"></i>
+                  </div>
+                  <p class="mt-1 text-xs text-violet-100/55">Customers can chat with you before they book.</p>
+                  <div id="barber-chat-list" class="mt-3 space-y-2"></div>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <h2 class="font-bold text-xl">Earnings this month</h2>
+                  <div class="mt-4 flex items-end gap-1.5 h-32">
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-violet-400" style="height:35%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-violet-400" style="height:50%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-violet-500 to-violet-400" style="height:42%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-fuchsia-500 to-fuchsia-400" style="height:75%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-fuchsia-500 to-fuchsia-400" style="height:90%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-cyan-400 to-cyan-300" style="height:68%"></div>
+                    <div class="flex-1 rounded-t bg-gradient-to-t from-cyan-400 to-cyan-300" style="height:55%"></div>
+                  </div>
+                  <div class="mt-2 flex justify-between text-[10px] text-violet-100/50">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-5">
+                <div class="glass rounded-2xl p-6">
+                  <p class="font-mono text-xs text-cyan-200">LADDER TIER</p>
+                  <p id="barb-tier" class="mt-1 text-2xl font-bold text-fuchsia-300">Starter</p>
+                  <p id="barb-reach" class="mt-1 text-sm text-violet-100/65">Base reach</p>
+                  <div class="mt-3">
+                    <div class="flex justify-between text-xs mb-1"><span id="barb-cum" class="text-cyan-200">₦0</span><span id="barb-next" class="text-violet-100/60">Next: ₦2,000</span></div>
+                    <div class="h-2 rounded-full bg-white/10"><div id="barb-bar" class="h-full rounded-full bg-gradient-to-r from-cyan-300 to-fuchsia-400 transition-all" style="width:0%"></div></div>
+                  </div>
+                  <button onclick="showView('ladder')" class="ghost-button mt-4 w-full rounded-lg px-3 py-2 text-sm font-bold">Manage discount</button>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <p class="font-mono text-xs text-fuchsia-200">CUT COUNTER</p>
+                  <p class="mt-1 text-3xl font-bold">0</p>
+                  <p class="mt-1 text-xs text-violet-100/60">Cuts delivered on Clip</p>
+                  <p class="mt-3 text-xs text-violet-100/60">Rating: <span class="font-bold text-yellow-300">4.9 ★</span></p>
+                </div>
+
+                <div class="glass rounded-2xl p-6">
+                  <p class="font-mono text-xs text-cyan-200">QUICK ACTIONS</p>
+                  <div class="mt-3 space-y-2">
+                    <button onclick="showView('catalog')" class="ghost-button w-full rounded-lg px-3 py-2 text-sm font-bold text-left flex items-center gap-2"><i data-lucide="grid-3x3" class="w-4 text-cyan-300"></i>Browse the catalog</button>
+                    <button onclick="showView('ladder')" class="ghost-button w-full rounded-lg px-3 py-2 text-sm font-bold text-left flex items-center gap-2"><i data-lucide="trending-up" class="w-4 text-violet-300"></i>Set your discount</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section id="chat" class="view">
+        <div class="max-w-2xl mx-auto">
+          <div class="mb-6">
+            <p class="font-mono text-xs text-cyan-200 font-bold">MESSAGES</p>
+            <h1 class="mt-2 font-bold text-[32px] leading-tight">Talk before you book.</h1>
+            <p class="mt-2 text-sm text-violet-100/70">Chat directly with any barber. Ask about styles, availability, or pricing.</p>
+          </div>
+          <div id="chat-gate" class="glass rounded-2xl p-8 text-center">
+            <p class="text-sm text-violet-100/65">Log in to start chatting with barbers.</p>
+            <button onclick="showView('login')" class="clip-button mt-4 rounded-xl px-5 py-2.5 font-bold text-sm">Log in</button>
+          </div>
+          <div id="chat-list-view" class="hidden-form space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- LADDER -->
+      <section id="ladder" class="view">
+        <div class="max-w-6xl mx-auto">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p class="font-mono text-xs text-cyan-200 font-bold">DISCOUNT → REACH</p>
+              <h1 class="mt-2 font-bold text-[32px] leading-tight">Give a discount. Earn reach.</h1>
+              <p class="mt-3 max-w-3xl text-sm text-violet-100/70">Set a discount. Every naira of discount delivered through a Clip payment counts toward your ladder. Cross a threshold and unlock a new reach tier.</p>
+            </div>
+          </div>
+          <div class="mt-6 grid lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-2 space-y-5">
+              <div class="glass neon-line rounded-2xl p-6 glow-sm">
+                <div class="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p class="font-mono text-xs text-cyan-200">CURRENT TIER</p>
+                    <h2 id="ld-level" class="mt-1 text-3xl font-bold">Starter</h2>
+                    <p id="ld-perk" class="mt-1 text-sm text-violet-100/70">Standard discovery in nearby search.</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs text-violet-100/55">Reach boost</p>
+                    <p id="ld-reach" class="text-2xl font-bold text-fuchsia-300">Base reach</p>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <div class="flex justify-between text-sm mb-1"><span id="ld-cum" class="font-semibold text-cyan-200">₦0</span><span id="ld-next" class="text-violet-100/65">Next: ₦2,000</span></div>
+                  <div class="h-3 rounded-full bg-white/10"><div id="ld-bar" class="h-full rounded-full bg-gradient-to-r from-cyan-300 to-fuchsia-400 transition-all" style="width:0%"></div></div>
+                </div>
+              </div>
+              <div class="glass rounded-2xl p-6">
+                <h2 class="font-bold text-xl mb-4">The reach ladder</h2>
+                <div id="ld-ladder" class="space-y-2"></div>
+              </div>
+            </div>
+            <div class="glass rounded-2xl p-6">
+              <h2 class="font-bold text-xl">Set your discount</h2>
+              <p class="mt-1 text-sm text-violet-100/70">Applies to every booking paid on Clip.</p>
+              <label class="mt-4 block text-xs" for="ld-slider">Discount</label>
+              <input id="ld-slider" oninput="setDiscount(this.value)" class="mt-2 w-full accent-fuchsia-500" type="range" min="0" max="30" step="5" value="10">
+              <p id="ld-slider-value" class="mt-2 text-3xl font-bold text-cyan-200">10%</p>
+              <p class="mt-2 text-xs text-violet-100/55">A ₦3,500 cut sells for <span id="ld-example" class="text-cyan-200">₦3,150</span> and credits <span id="ld-example-disc" class="text-cyan-200">₦350</span> to the ladder.</p>
+              <div class="mt-4 rounded-lg border border-cyan-300/25 bg-cyan-300/5 p-3 text-xs text-cyan-100">All payments settle on Clip. That's what makes the discount verified.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROADMAP -->
+      <section id="roadmap" class="view">
+        <div class="max-w-5xl mx-auto">
+          <p class="font-mono text-xs text-cyan-200 font-bold">18-MONTH PLAN</p>
+          <h1 class="mt-2 font-bold text-[32px] leading-tight">Build the economy. Then scale it.</h1>
+          <p class="mt-3 text-sm text-violet-100/70 max-w-2xl">Fiat rails first. Loyalty points second. Credit identity third. Licensed adjacent products last.</p>
+
+          <div class="mt-7 space-y-4">
+            <article class="glass rounded-2xl p-6 border-l-4 border-l-cyan-400">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div><p class="font-mono text-xs text-cyan-200">PHASE 1 · MONTHS 1–3</p><h2 class="mt-1 font-bold text-2xl">Fiat marketplace + MVP wallet</h2></div>
+                <span class="pill rounded-full px-3 py-1 text-xs font-bold">₦3.8M</span>
+              </div>
+              <ul class="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-violet-100/75">
+                <li class="rounded-lg bg-black/20 p-3">Style catalog with 200 real styles</li>
+                <li class="rounded-lg bg-black/20 p-3">Barber-set pricing per category</li>
+                <li class="rounded-lg bg-black/20 p-3">Barber wallet + transaction history</li>
+                <li class="rounded-lg bg-black/20 p-3">Customer ↔ barber chat</li>
+                <li class="rounded-lg bg-black/20 p-3">Paystack / OPay checkout</li>
+                <li class="rounded-lg bg-black/20 p-3">Offline-first queueing</li>
+              </ul>
+            </article>
+
+            <article class="glass rounded-2xl p-6 border-l-4 border-l-violet-400">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div><p class="font-mono text-xs text-violet-200">PHASE 2 · MONTHS 4–9</p><h2 class="mt-1 font-bold text-2xl">Retention, coaching, Nigerian-language voice</h2></div>
+                <span class="pill rounded-full px-3 py-1 text-xs font-bold">₦7.5M</span>
+              </div>
+              <ul class="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-violet-100/75">
+                <li class="rounded-lg bg-black/20 p-3">Churn prediction, WhatsApp delivery</li>
+                <li class="rounded-lg bg-black/20 p-3">Coach insights as 60-second voice notes</li>
+                <li class="rounded-lg bg-black/20 p-3">Voice booking on SBPN</li>
+                <li class="rounded-lg bg-black/20 p-3">Loyalty points (not a token)</li>
+                <li class="rounded-lg bg-black/20 p-3">VibraClip sensor pilot</li>
+              </ul>
+            </article>
+
+            <article class="glass rounded-2xl p-6 border-l-4 border-l-fuchsia-400">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div><p class="font-mono text-xs text-fuchsia-200">PHASE 3 · MONTHS 10–18</p><h2 class="mt-1 font-bold text-2xl">Credit identity pilot + optional on-chain receipts</h2></div>
+                <span class="pill rounded-full px-3 py-1 text-xs font-bold">₦9.5M</span>
+              </div>
+              <ul class="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-violet-100/75">
+                <li class="rounded-lg bg-black/20 p-3">Credit scoring via licensed lender partner</li>
+                <li class="rounded-lg bg-black/20 p-3">Group buying for supplies</li>
+                <li class="rounded-lg bg-black/20 p-3">Optional stablecoin settlement</li>
+                <li class="rounded-lg bg-black/20 p-3">Human review for declines</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVESTORS -->
+      <section id="investors" class="view">
+        <div class="max-w-5xl mx-auto">
+          <div class="glass neon-line rounded-3xl p-7 sm:p-10 glow-sm" style="background:linear-gradient(135deg,#1d123b,#110a25)">
+            <p class="font-mono text-xs text-cyan-300 font-bold">INVESTOR BRIEF · PRE-SEED</p>
+            <h1 class="mt-3 font-bold text-[30px] leading-tight max-w-3xl">The income and credit identity layer for Nigeria's informal barbers.</h1>
+            <p class="mt-4 text-violet-100/80 leading-relaxed max-w-2xl">Paid bookings in Abuja settle on Clip. That settlement record is the asset — a portable, verifiable income history for workers who have never had one.</p>
+            <div class="mt-6 grid sm:grid-cols-3 gap-3">
+              <div class="rounded-xl bg-black/25 p-4"><p class="font-mono text-[10px] text-cyan-200">RAISING</p><p class="mt-1 text-xl font-bold">₦180M</p><p class="text-xs text-violet-100/60">≈ US$115K · 18-month runway</p></div>
+              <div class="rounded-xl bg-black/25 p-4"><p class="font-mono text-[10px] text-cyan-200">STRUCTURE</p><p class="mt-1 text-xl font-bold">Pre-seed</p><p class="text-xs text-violet-100/60">Also applying: Solana Foundation convertible grant, Colosseum</p></div>
+              <div class="rounded-xl bg-black/25 p-4"><p class="font-mono text-[10px] text-cyan-200">TRACTION</p><p class="mt-1 text-xl font-bold">Abuja pilot</p><p class="text-xs text-violet-100/60">40 barbers · wallet live · catalog shipped</p></div>
+            </div>
+          </div>
+
+          <div class="mt-6 grid md:grid-cols-2 gap-5">
+            <article class="glass rounded-2xl p-6">
+              <p class="font-mono text-xs text-fuchsia-300">THE THESIS</p>
+              <div class="mt-4 space-y-3 text-sm">
+                <div class="rounded-xl bg-black/20 p-4"><p class="font-bold text-cyan-200">1 · Problem</p><p class="mt-1 text-violet-100/75">A barber in Abuja has no verifiable income history. Cash leaves no record. Nigeria's unbanked rate sits around 17%, concentrated in this population.</p></div>
+                <div class="rounded-xl bg-black/20 p-4"><p class="font-bold text-cyan-200">2 · Why not a database</p><p class="mt-1 text-violet-100/75">A private ledger controlled by Neo-Clip isn't portable to an external lender. The record has to be independently verifiable.</p></div>
+                <div class="rounded-xl bg-black/20 p-4"><p class="font-bold text-cyan-200">3 · Why Solana</p><p class="mt-1 text-violet-100/75">Solana processed <b class="text-cyan-200">$650B in stablecoin transactions in Feb 2026</b> and carries ~<b class="text-cyan-200">46% of stablecoin transfers among peer chains</b>. Sub-cent settlement is the only way micro-payments at ₦500 work.</p></div>
+              </div>
+            </article>
+
+            <article class="glass rounded-2xl p-6">
+              <p class="font-mono text-xs text-cyan-200">USE OF FUNDS</p>
+              <div class="mt-4 space-y-2 text-sm">
+                <div><div class="flex justify-between"><span>Engineering</span><b>₦90M</b></div><div class="mt-1 h-1.5 rounded-full bg-white/10"><div class="h-full w-1/2 rounded-full bg-cyan-300"></div></div></div>
+                <div><div class="flex justify-between"><span>Field ops (Abuja)</span><b>₦35M</b></div><div class="mt-1 h-1.5 rounded-full bg-white/10"><div class="h-full w-[19%] rounded-full bg-violet-400"></div></div></div>
+                <div><div class="flex justify-between"><span>Compliance &amp; legal</span><b>₦22M</b></div><div class="mt-1 h-1.5 rounded-full bg-white/10"><div class="h-full w-[12%] rounded-full bg-fuchsia-400"></div></div></div>
+                <div><div class="flex justify-between"><span>Hardware pilot</span><b>₦18M</b></div><div class="mt-1 h-1.5 rounded-full bg-white/10"><div class="h-full w-[10%] rounded-full bg-emerald-400"></div></div></div>
+                <div><div class="flex justify-between"><span>Reserve</span><b>₦15M</b></div><div class="mt-1 h-1.5 rounded-full bg-white/10"><div class="h-full w-[8%] rounded-full bg-white/40"></div></div></div>
+              </div>
+            </article>
+
+            <article class="glass rounded-2xl p-6 md:col-span-2">
+              <p class="font-mono text-xs text-emerald-200">WHY NOW</p>
+              <div class="mt-4 grid sm:grid-cols-4 gap-3 text-xs">
+                <div class="rounded-lg bg-white/5 p-3"><b class="text-cyan-200">US$10.17bn</b><p class="mt-1 text-violet-100/65">Nigeria beauty market, 2025 — largest in Africa</p></div>
+                <div class="rounded-lg bg-white/5 p-3"><b class="text-cyan-200">237M</b><p class="mt-1 text-violet-100/65">Population with a young informal workforce</p></div>
+                <div class="rounded-lg bg-white/5 p-3"><b class="text-cyan-200">$650B</b><p class="mt-1 text-violet-100/65">Solana stablecoin volume, Feb 2026</p></div>
+                <div class="rounded-lg bg-white/5 p-3"><b class="text-cyan-200">29% WER</b><p class="mt-1 text-violet-100/65">SBPN improvement across Nigerian languages</p></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div id="chat-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm modal-backdrop">
+  <div class="absolute inset-0 flex items-end sm:items-center justify-center p-4">
+    <div class="w-full max-w-md glass rounded-2xl overflow-hidden glow-fuchsia modal-panel">
+      <div class="flex items-center justify-between p-4 border-b border-violet-300/15">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 grid place-items-center glow-sm"><span class="font-bold text-sm" id="chat-avatar">K</span></div>
+          <div><p class="font-bold text-sm" id="chat-with">Barber</p><p class="text-xs text-violet-100/60">Usually replies in minutes</p></div>
+        </div>
+        <button onclick="closeChat()" class="ghost-button rounded-lg p-2"><i data-lucide="x" class="w-4"></i></button>
+      </div>
+      <div id="chat-messages" class="h-80 overflow-y-auto p-4 space-y-3"></div>
+      <div class="p-3 border-t border-violet-300/15 flex gap-2">
+        <input id="chat-input" type="text" placeholder="Type a message..." class="input-dark flex-1 rounded-lg px-3 py-2 text-sm" onkeypress="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()" class="clip-button rounded-lg px-4 py-2"><i data-lucide="send" class="w-4"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STYLE MODAL -->
+<div id="style-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm modal-backdrop">
+  <div class="absolute inset-0 flex items-end sm:items-center justify-center p-4">
+    <div class="w-full max-w-sm glass rounded-2xl overflow-hidden glow-cyan modal-panel">
+      <div class="h-44 overflow-hidden relative" id="style-modal-bg">
+        <img id="style-modal-img" src="" alt="Selected style" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+      </div>
+      <div class="p-5">
+        <p class="font-mono text-xs text-cyan-200" id="style-modal-cat">CATEGORY</p>
+        <h2 class="mt-1 font-bold text-2xl" id="style-modal-name">Style name</h2>
+        <div class="mt-3 grid grid-cols-3 gap-2 text-xs">
+          <div class="rounded-lg bg-white/5 p-2 text-center">Price<b class="block text-cyan-200 mt-0.5" id="style-modal-price">₦0</b></div>
+          <div class="rounded-lg bg-white/5 p-2 text-center">Duration<b class="block text-cyan-200 mt-0.5" id="style-modal-duration">0 min</b></div>
+          <div class="rounded-lg bg-white/5 p-2 text-center">Rating<b class="block text-cyan-200 mt-0.5" id="style-modal-pop">4.5★</b></div>
+        </div>
+        <p class="mt-3 text-xs text-violet-100/65" id="style-modal-maint">Maintenance level</p>
+        <div class="mt-4 flex gap-2">
+          <button onclick="closeStyleModal()" class="ghost-button flex-1 rounded-xl px-4 py-2.5 font-bold text-sm">Close</button>
+          <button onclick="selectStyleFromModal()" class="clip-button flex-1 rounded-xl px-4 py-2.5 font-bold text-sm">Select this style</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
